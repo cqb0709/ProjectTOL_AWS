@@ -33,7 +33,7 @@ jobs:
       run: |
         zip -r Script.zip Script
         mkdir UPLOAD
-        mv Script.zip /UPLOAD
+        mv Script.zip ./UPLOAD
 
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v4
