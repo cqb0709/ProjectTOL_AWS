@@ -27,7 +27,8 @@ jobs:
 
     - name: Test Python Code
       run: |
-        python -m pytest Script/GameScript.py
+        cd Script
+        python -m pytest GameScript.py
 
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v4
