@@ -4,8 +4,8 @@ on:
   push:
     branches:
       - main
-    #paths:
-      #- Script/**
+    paths:
+      - Script/**
 
 jobs:
   build:
@@ -27,7 +27,7 @@ jobs:
 
     - name: Test Python Code
       run: |
-        python -m pytest Script/test_GameScript.py
+        python -m pytest Script/GameScript.py
 
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v4
