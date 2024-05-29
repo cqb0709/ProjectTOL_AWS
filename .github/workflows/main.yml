@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - Script
+      - Script/**
 
 jobs:
   build:
