@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+    paths:
+      - Script
 
 jobs:
   build:
@@ -25,6 +27,7 @@ jobs:
 
     - name: Test Python Code
       run: |
+        cd Script
         python -m pytest
 
     - name: Configure AWS Credentials
@@ -35,4 +38,4 @@ jobs:
         aws-region: ap-northeast-2
 
     - name: Deploy to S3
-      run: aws s3 sync . s3://projecttol-s3/ProjectTOL_Script --delete
+      run: aws s3 sync Script s3://projecttol-s3/ProjectTOL_Script --delete
