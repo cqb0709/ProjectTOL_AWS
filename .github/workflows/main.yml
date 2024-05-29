@@ -32,7 +32,8 @@ jobs:
     - name: Compress folder
       run: |
         zip -r Script.zip Script
-        ls -lh
+        mkdir UPLOAD
+        mv Script.zip /UPLOAD
 
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v4
@@ -44,4 +45,4 @@ jobs:
     - name: Deploy to S3
       run: |
         ls -lh
-        aws s3 cp Script.zip s3://projecttol-s3/ProjectTOL_Script --delete --request-payer requester
+        aws s3 sync UPLOAD s3://projecttol-s3/ProjectTOL_Script --delete --request-payer requester
