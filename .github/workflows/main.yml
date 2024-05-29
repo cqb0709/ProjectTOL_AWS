@@ -42,4 +42,4 @@ jobs:
         aws-region: ap-northeast-2
 
     - name: Deploy to S3
-      run: aws s3 sync Script.zip s3://projecttol-s3/ProjectTOL_Script/Script.zip --delete --request-payer requester
+      run: aws s3 sync Script.zip s3://projecttol-s3/ProjectTOL_Script/ --delete --request-payer requester
