@@ -31,7 +31,8 @@ jobs:
     
     - name: Compress folder
       run: |
-        zip -r Script.zip Script/
+        zip -r Script.zip Script
+        ls-lh
 
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v4
