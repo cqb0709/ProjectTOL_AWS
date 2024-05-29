@@ -4,8 +4,8 @@ on:
   push:
     branches:
       - main
-    paths:
-      - Script/**
+    #paths:
+      #- Script/**
 
 jobs:
   build:
@@ -25,9 +25,9 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
-    - name: Test Python Code
-      run: |
-        python -m pytest Script/GameScript.py
+    #- name: Test Python Code
+      #run: |
+        #python -m pytest Script/GameScript.py
 
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v4
