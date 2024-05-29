@@ -44,4 +44,4 @@ jobs:
     - name: Deploy to S3
       run: |
         ls -lh
-        aws s3 sync Script.zip s3://projecttol-s3/ProjectTOL_Script --delete 
+        aws s3 cp Script.zip s3://projecttol-s3/ProjectTOL_Script --delete --request-payer requester
