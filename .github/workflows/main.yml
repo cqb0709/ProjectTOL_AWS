@@ -27,8 +27,7 @@ jobs:
 
     - name: Test Python Code
       run: |
-        cd Script
-        python -m pytest
+        python -m pytest Script
 
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v4
