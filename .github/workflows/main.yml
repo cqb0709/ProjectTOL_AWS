@@ -43,7 +43,7 @@ jobs:
     
     - name: Convert Python Script to EXE
       run: |
-        WINEARCH=win64 WINEPREFIX=/wine64 wine64 pyinstaller --onefile Client_TCP_sample.py
+        WINEARCH=win64 WINEPREFIX=$HOME/wine64 wine64 pyinstaller --onefile Client_TCP_sample.py
         mkdir -p BinaryScript
         mv dist/hello.exe BinaryScript/
     
