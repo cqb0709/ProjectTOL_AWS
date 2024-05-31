@@ -29,26 +29,27 @@ jobs:
       #run: |
         #python -m pytest Script/GameScript.py
     
-    - name: Install Wine
+    - name: Install Wine and Dependencies
       run: |
-        sudo dpkg --add-architecture amd64
+        sudo dpkg --add-architecture i386
         sudo apt update
-        sudo apt install -y wine64
-        pip install pyinstaller
+        sudo apt install -y wine32 winbind
+        sudo apt install -y python3-pip
+        sudo apt install -y python-is-python3
   
     - name: Set up Wine
       run: |
-        mkdir -p $HOME/wine64
-        WINEARCH=win64 WINEPREFIX=$HOME/wine64 wine64 wineboot
-
+        mkdir -p $HOME/wine32
+        WINEARCH=win32 WINEPREFIX=$HOME/wine32 wine wineboot
+  
     - name: Install Python and PyInstaller in Wine
       run: |
-        WINEPREFIX=$HOME/wine64 wine64 python -m pip install --upgrade pip
-        WINEPREFIX=$HOME/wine64 wine64 pip install pyinstaller
+        WINEPREFIX=$HOME/wine32 wine python -m pip install --upgrade pip
+        WINEPREFIX=$HOME/wine32 wine pip install pyinstaller
     
     - name: Convert Python Script to EXE
       run: |
-        WINEARCH=win64 WINEPREFIX=$HOME/wine64 wine64 pyinstaller --onefile Client_TCP_sample.py
+        WINEPREFIX=$HOME/wine32 wine pyinstaller --onefile Client_TCP_sample.py
         mkdir -p BinaryScript
         mv dist/hello.exe BinaryScript/
     
