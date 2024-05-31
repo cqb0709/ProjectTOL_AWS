@@ -29,9 +29,22 @@ jobs:
       #run: |
         #python -m pytest Script/GameScript.py
     
+    - name: Install Wine and PyInstaller
+      run: |
+        sudo dpkg --add-architecture amd64
+        sudo apt update
+        sudo apt install -y wine64
+        pip install pyinstaller
+  
+    - name: Convert Python Script to EXE
+      run: |
+        WINEARCH=win64 WINEPREFIX=/wine64 wine64 pyinstaller --onefile Client_TCP_sample.py
+        mkdir -p BinaryScript
+        mv dist/hello.exe BinaryScript/
+    
     - name: Compress folder
       run: |
-        zip -r Script.zip Script
+        zip -r BinaryScript.zip BinaryScript
         mkdir UPLOAD
         mv Script.zip ./UPLOAD
 
@@ -43,6 +56,4 @@ jobs:
         aws-region: ap-northeast-2
 
     - name: Deploy to S3
-      run: |
-        ls -lh
-        aws s3 sync UPLOAD s3://projecttol-s3/ProjectTOL_Script --delete --request-payer requester
+      run: aws s3 sync UPLOAD s3://projecttol-s3/ProjectTOL_Script --delete --request-payer requester
