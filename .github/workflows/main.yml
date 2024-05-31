@@ -28,42 +28,13 @@ jobs:
     #- name: Test Python Code
       #run: |
         #python -m pytest Script/GameScript.py
-    
-    - name: Install Wine and Dependencies
-      run: |
-        sudo dpkg --add-architecture i386
-        sudo apt update
-        sudo apt install -y wine32 winbind
-        sudo apt install -y python3-pip
-        sudo apt install -y python-is-python3
-        sudo apt install -y wget
-  
-    - name: Set up Wine
-      run: |
-        mkdir -p $HOME/wine32
-        WINEARCH=win32 WINEPREFIX=$HOME/wine32 wine wineboot
-  
-    - name: Download and Install Python in Wine
-      run: |
-        wget https://www.python.org/ftp/python/3.9.0/python-3.9.0.exe -O python-installer.exe
-        WINEPREFIX=$HOME/wine32 wine python-installer.exe /quiet InstallAllUsers=1 PrependPath=1
-  
-    - name: Install PyInstaller in Wine
-      run: |
-        WINEPREFIX=$HOME/wine32 wine pip install pyinstaller
-        
-    - name: Convert Python Script to EXE
-      run: |
-        WINEPREFIX=$HOME/wine32 wine pyinstaller --onefile Client_TCP_sample.py
-        mkdir -p BinaryScript
-        mv dist/Client_TCP_sample.exe BinaryScript/
-    
+
     - name: Compress folder
       run: |
-        zip -r BinaryScript.zip BinaryScript
+        zip -r BinaryScript.zip Script
         mkdir UPLOAD
-        mv Script.zip ./UPLOAD
-
+        mv BinaryScript.zip ./UPLOAD
+    
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v4
       with:
