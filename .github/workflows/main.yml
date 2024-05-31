@@ -29,9 +29,13 @@ jobs:
       #run: |
         #python -m pytest Script/GameScript.py
 
+    - name: Convert to Binary with PyInstaller
+      run: |
+        pyinstaller --onefile Script/GameScript.py
+  
     - name: Compress folder
       run: |
-        zip -r BinaryScript.zip Script
+        zip -r BinaryScript.zip dist
         mkdir UPLOAD
         mv BinaryScript.zip ./UPLOAD
     
