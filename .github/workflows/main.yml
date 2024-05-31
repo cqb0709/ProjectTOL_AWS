@@ -29,7 +29,7 @@ jobs:
       #run: |
         #python -m pytest Script/GameScript.py
     
-    - name: Install Wine and PyInstaller
+    - name: Install Wine
       run: |
         sudo dpkg --add-architecture amd64
         sudo apt update
@@ -40,6 +40,11 @@ jobs:
       run: |
         mkdir -p $HOME/wine64
         WINEARCH=win64 WINEPREFIX=$HOME/wine64 wine64 wineboot
+
+    - name: Install Python and PyInstaller in Wine
+      run: |
+        WINEPREFIX=$HOME/wine64 wine64 python -m pip install --upgrade pip
+        WINEPREFIX=$HOME/wine64 wine64 pip install pyinstaller
     
     - name: Convert Python Script to EXE
       run: |
