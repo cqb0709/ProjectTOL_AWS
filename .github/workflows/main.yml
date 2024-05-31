@@ -36,22 +36,27 @@ jobs:
         sudo apt install -y wine32 winbind
         sudo apt install -y python3-pip
         sudo apt install -y python-is-python3
+        sudo apt install -y wget
   
     - name: Set up Wine
       run: |
         mkdir -p $HOME/wine32
         WINEARCH=win32 WINEPREFIX=$HOME/wine32 wine wineboot
   
-    - name: Install Python and PyInstaller in Wine
+    - name: Download and Install Python in Wine
       run: |
-        WINEPREFIX=$HOME/wine32 wine python -m pip install --upgrade pip
+        wget https://www.python.org/ftp/python/3.9.0/python-3.9.0.exe -O python-installer.exe
+        WINEPREFIX=$HOME/wine32 wine python-installer.exe /quiet InstallAllUsers=1 PrependPath=1
+  
+    - name: Install PyInstaller in Wine
+      run: |
         WINEPREFIX=$HOME/wine32 wine pip install pyinstaller
-    
+        
     - name: Convert Python Script to EXE
       run: |
         WINEPREFIX=$HOME/wine32 wine pyinstaller --onefile Client_TCP_sample.py
         mkdir -p BinaryScript
-        mv dist/hello.exe BinaryScript/
+        mv dist/Client_TCP_sample.exe BinaryScript/
     
     - name: Compress folder
       run: |
