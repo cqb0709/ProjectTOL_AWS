@@ -31,7 +31,7 @@ jobs:
 
     - name: Convert to Binary with PyInstaller
       run: |
-        pyinstaller --onefile Script/Client_TCP_sample.py
+        pyinstaller --onefile ./Client_TCP_sample.py
   
     - name: Compress folder
       run: |
