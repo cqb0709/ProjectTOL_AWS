@@ -38,7 +38,7 @@ jobs:
   
     - name: Set up Wine
       run: |
-        mkdir -p /wine64
+        mkdir wine64
         WINEARCH=win64 WINEPREFIX=/wine64 wine64 wineboot
     
     - name: Convert Python Script to EXE
