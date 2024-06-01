@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "node-gameloop": "^0.1.4"
+  }
+}
