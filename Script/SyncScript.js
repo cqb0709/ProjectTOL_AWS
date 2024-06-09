@@ -2,7 +2,10 @@ const gameloop = require('node-gameloop');
 const util = require('util');
 
 // Example override configuration
-const configuration = {};
+const configuration = {
+    pingIntervalTime: 3000,
+    maxPlayers: 2
+};
 
 var session = null;                        // The Realtime server session object
 let sessionTimeoutTimer = null;
@@ -121,7 +124,9 @@ function onPlayerAccepted(player) {
 // This is called before the player is removed from the player list
 function onPlayerDisconnect(peerId) {
     session.getLogger().info("[app] onPlayerDisconnect: " + peerId);
-    StopGame();
+    if (players.length == 0) {
+        StopGame();
+    }
 }
 
 function onHealthCheck() {
