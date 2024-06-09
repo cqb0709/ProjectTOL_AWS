@@ -9,11 +9,12 @@ let sessionTimeoutTimer = null;
 const SESSION_TIMEOUT = 1 * 60 * 1000;
 
 // server op codes (messages server sends)
-const LOGICAL_PLAYER_OP_CODE = 100;
+const OP_CODE_PLAYER_ACCEPTED = 113;
+const GAME_READY_OP = 200;
+const GAME_START_OP = 201;
 
 // client op codes (messages client sends)
-const SCENE_READY_OP_CODE = 200;
-const HOP_OP_CODE = 201;
+const PLAYER_ACTION = 300;
 
 ///////////////////////////////////////////////////////////////////////////////
 // Utility functions
@@ -59,15 +60,15 @@ function onMessage(gameMessage) {
         let logicalSender = logicalPlayerIDs[gameMessage.sender];
 
         switch (gameMessage.opCode) {
-            case SCENE_READY_OP_CODE:
+            case GAME_READY_OP:
                 // Do nothing as both players just need to signal ready state
                 break;
 
-            case HOP_OP_CODE:
-                // Forward the HOP_OP_CODE message to the other player
+            case PLAYER_ACTION:
+                // Forward the PLAYER_ACTION message to the other player
                 let otherPlayer = (logicalSender === 0) ? 1 : 0;
                 if (players[otherPlayer]) {
-                    SendStringToClient([players[otherPlayer]], HOP_OP_CODE, gameMessage.contents);
+                    SendStringToClient([players[otherPlayer]], PLAYER_ACTION, gameMessage.contents);
                 }
                 break;
 
@@ -112,7 +113,7 @@ function onPlayerAccepted(player) {
     logicalPlayerIDs[player.peerId] = logicalID;
     session.getLogger().info("[app] onPlayerAccepted: logicalPlayerIDs array = " + logicalPlayerIDs.toString());
 
-    SendStringToClient([player.peerId], LOGICAL_PLAYER_OP_CODE, logicalID.toString());
+    SendStringToClient([player.peerId], OP_CODE_PLAYER_ACCEPTED, logicalID.toString());
 }
 
 // On Player Disconnect is called when a player has left or been forcibly terminated
@@ -121,6 +122,10 @@ function onPlayerAccepted(player) {
 function onPlayerDisconnect(peerId) {
     session.getLogger().info("[app] onPlayerDisconnect: " + peerId);
     StopGame();
+}
+
+function onHealthCheck() {
+    return true;
 }
 
 function StopGame() {
@@ -166,6 +171,7 @@ exports.ssExports = {
     onMessage: onMessage,
     onPlayerConnect: onPlayerConnect,
     onPlayerDisconnect: onPlayerDisconnect,
+    onHealthCheck: onHealthCheck,
     onProcessStarted: onProcessStarted,
     onPlayerAccepted: onPlayerAccepted,
     onStartGameSession: onStartGameSession
