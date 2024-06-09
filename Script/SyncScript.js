@@ -30,7 +30,7 @@ function SendStringToClient(peerIds, opCode, stringToSend) {
     let gameMessage = session.newTextGameMessage(opCode, session.getServerId(), stringToSend);
     let peerArrayLen = peerIds.length;
 
-    for (let index = 0; index < peerArrayLen; ++index) {
+    for (let index = 0; index < peerArrayLen; index++) {
         session.getLogger().info("[app] SendStringToClient: sendMessageT " + gameMessage.toString() + " " + peerIds[index].toString());
         session.sendMessage(gameMessage, peerIds[index]);
     }
@@ -93,10 +93,10 @@ function onPlayerConnect(player) {
         sessionTimeoutTimer = null;
     }
 
-    if (players.length >= 2) {
-        // max of two players so reject any additional connections
-        return false;
-    }
+    //if (players.length >= 2) {
+    //    // max of two players so reject any additional connections
+    //    return false;
+    //}
     return true;
 }
 
@@ -161,7 +161,7 @@ function onProcessStarted() {
 // own instance of this script.
 function onStartGameSession(gameSession) {
     session.getLogger().info("[app] onStartGameSession");
-    // The game session is started by the client service Lambda function
+    //Players will join with FlexMatch.
     // If no player joins, we want to kill the game session after
     // a certain period of time so it doesn't hang around forever taking up
     // a game instance.
