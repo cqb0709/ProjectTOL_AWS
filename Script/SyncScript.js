@@ -124,9 +124,7 @@ function onPlayerAccepted(player) {
 // This is called before the player is removed from the player list
 function onPlayerDisconnect(peerId) {
     session.getLogger().info("[app] onPlayerDisconnect: " + peerId);
-    if (players.length == 0) {
-        StopGame();
-    }
+    StopGame();
 }
 
 function onHealthCheck() {
