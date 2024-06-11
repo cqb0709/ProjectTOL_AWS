@@ -28,13 +28,26 @@ function SendStringToClient(peerIds, opCode, stringToSend) {
     session.getLogger().info("[app] SendStringToClient: peerIds = " + peerIds.toString() + " opCode = " + opCode + " stringToSend = " + stringToSend);
 
     let gameMessage = session.newTextGameMessage(opCode, session.getServerId(), stringToSend);
-    let peerArrayLen = peerIds.length;
+    const allPlayersGroupId = session.getAllPlayersGroupId();
 
-    for (let index = 0; index < peerArrayLen; index++) {
-        session.getLogger().info("[app] SendStringToClient: sendMessageT " + gameMessage.toString() + " " + peerIds[index].toString());
-        session.sendMessage(gameMessage, peerIds[index]);
-    }
+    session.getLogger().info(`[app] SendStringToClient: sendMessage to all players in group ${allPlayersGroupId}`);
+    session.sendReliableGroupMessage(gameMessage, allPlayersGroupId);
+
+
+    //let peerArrayLen = peerIds.length;
+
+    //for (let index = 0; index < peerArrayLen; index++) {
+    //    session.getLogger().info("[app] SendStringToClient: sendMessageT " + gameMessage.toString() + " " + peerIds[index].toString());
+    //    session.sendMessage(gameMessage, peerIds[index]);
+    //}
 }
+
+// This function sends a message to all connected players
+//function BroadcastMessage(opCode, message) {
+//    let peerIds = session.getPlayers().map(player => player.peerId);
+//    SendStringToClient(peerIds, opCode, message);
+//}
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // Game code
@@ -58,26 +71,32 @@ function onMessage(gameMessage) {
     session.getLogger().info("[app] onMessage(gameMessage): ");
     session.getLogger().info(util.inspect(gameMessage));
 
+    // Broadcast the received message to all players
+    //BroadcastMessage(gameMessage.opCode, gameMessage.contents);
+
     // sender 0 is server so we don't process them 
     if (gameMessage.sender != 0) {
-        let logicalSender = logicalPlayerIDs[gameMessage.sender];
 
-        switch (gameMessage.opCode) {
-            case GAME_READY_OP:
-                // Do nothing as both players just need to signal ready state
-                break;
+        SendStringToClient(gameMessage.opCode, gameMessage.contents);
 
-            case PLAYER_ACTION:
-                // Forward the PLAYER_ACTION message to the other player
-                let otherPlayer = (logicalSender === 0) ? 1 : 0;
-                if (players[otherPlayer]) {
-                    SendStringToClient([players[otherPlayer]], PLAYER_ACTION, gameMessage.contents);
-                }
-                break;
+        //let logicalSender = logicalPlayerIDs[gameMessage.sender];
 
-            default:
-                session.getLogger().info("[warning] Unrecognized opCode in gameMessage");
-        }
+        //switch (gameMessage.opCode) {
+        //    case GAME_READY_OP:
+        //        // Do nothing as both players just need to signal ready state
+        //        break;
+
+        //    case PLAYER_ACTION:
+        //        // Forward the PLAYER_ACTION message to the other player
+        //        let otherPlayer = (logicalSender === 0) ? 1 : 0;
+        //        if (players[otherPlayer]) {
+        //            SendStringToClient([players[otherPlayer]], PLAYER_ACTION, gameMessage.contents);
+        //        }
+        //        break;
+
+        //    default:
+        //        session.getLogger().info("[warning] Unrecognized opCode in gameMessage");
+        //}
     }
 }
 
@@ -93,10 +112,6 @@ function onPlayerConnect(player) {
         sessionTimeoutTimer = null;
     }
 
-    //if (players.length >= 2) {
-    //    // max of two players so reject any additional connections
-    //    return false;
-    //}
     return true;
 }
 
