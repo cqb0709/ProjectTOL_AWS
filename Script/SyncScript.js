@@ -77,27 +77,24 @@ function onMessage(gameMessage) {
 
     // sender 0 is server so we don't process them 
     if (gameMessage.sender != 0) {
+        let cnt = 0;
+        switch (gameMessage.opCode) {
+            case GAME_READY_OP:
+                // Do nothing as both players just need to signal ready state
+                cnt++;
+                if (cnt == 2) { 
+                    SendStringToClient(GAME_START_OP, gameMessage.contents);
+                }
+                break;
 
-        SendStringToClient(gameMessage.opCode, gameMessage.contents);
+            case PLAYER_ACTION:
+                // Forward the PLAYER_ACTION message to the other player
+                SendStringToClient(gameMessage.opCode, gameMessage.contents);
+                break;
 
-        //let logicalSender = logicalPlayerIDs[gameMessage.sender];
-
-        //switch (gameMessage.opCode) {
-        //    case GAME_READY_OP:
-        //        // Do nothing as both players just need to signal ready state
-        //        break;
-
-        //    case PLAYER_ACTION:
-        //        // Forward the PLAYER_ACTION message to the other player
-        //        let otherPlayer = (logicalSender === 0) ? 1 : 0;
-        //        if (players[otherPlayer]) {
-        //            SendStringToClient([players[otherPlayer]], PLAYER_ACTION, gameMessage.contents);
-        //        }
-        //        break;
-
-        //    default:
-        //        session.getLogger().info("[warning] Unrecognized opCode in gameMessage");
-        //}
+            default:
+                session.getLogger().info("[warning] Unrecognized opCode in gameMessage");
+        }
     }
 }
 
