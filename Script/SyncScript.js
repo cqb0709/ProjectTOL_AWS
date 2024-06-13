@@ -25,20 +25,20 @@ const PLAYER_ACTION = 300;
 ///////////////////////////////////////////////////////////////////////////////
 
 // This function takes a list of peers and sends the opcode and string to the peer
-function SendStringToClient(peerIds, opCode, stringToSend) {
-    session.getLogger().info("[app] SendStringToClient: peerIds = " + peerIds.toString() + " opCode = " + opCode + " stringToSend = " + stringToSend);
+function BroadcastMessage(opCode, stringToSend) {
+    session.getLogger().info("[app] BroadcastMessage: opCode = " + opCode + " stringToSend = " + stringToSend);
 
     let gameMessage = session.newTextGameMessage(opCode, session.getServerId(), stringToSend);
     const allPlayersGroupId = session.getAllPlayersGroupId();
 
-    session.getLogger().info(`[app] SendStringToClient: sendMessage to all players in group ${allPlayersGroupId}`);
+    session.getLogger().info(`[app] BroadcastMessage: sendMessage to all players in group ${allPlayersGroupId}`);
     session.sendReliableGroupMessage(gameMessage, allPlayersGroupId);
 
 
     //let peerArrayLen = peerIds.length;
 
     //for (let index = 0; index < peerArrayLen; index++) {
-    //    session.getLogger().info("[app] SendStringToClient: sendMessageT " + gameMessage.toString() + " " + peerIds[index].toString());
+    //    session.getLogger().info("[app] BroadcastMessage: sendMessageT " + gameMessage.toString() + " " + peerIds[index].toString());
     //    session.sendMessage(gameMessage, peerIds[index]);
     //}
 }
@@ -46,7 +46,7 @@ function SendStringToClient(peerIds, opCode, stringToSend) {
 // This function sends a message to all connected players
 //function BroadcastMessage(opCode, message) {
 //    let peerIds = session.getPlayers().map(player => player.peerId);
-//    SendStringToClient(peerIds, opCode, message);
+//    BroadcastMessage(peerIds, opCode, message);
 //}
 
 
@@ -54,6 +54,7 @@ function SendStringToClient(peerIds, opCode, stringToSend) {
 // Game code
 ///////////////////////////////////////////////////////////////////////////////
 
+let cnt = 0;
 let players = [];
 let logicalPlayerIDs = {};
 
@@ -77,19 +78,19 @@ function onMessage(gameMessage) {
 
     // sender 0 is server so we don't process them 
     if (gameMessage.sender != 0) {
-        let cnt = 0;
+        
         switch (gameMessage.opCode) {
             case GAME_READY_OP:
                 // Do nothing as both players just need to signal ready state
                 cnt++;
                 if (cnt == 2) { 
-                    SendStringToClient(GAME_START_OP, gameMessage.contents);
+                    BroadcastMessage(GAME_START_OP, gameMessage.contents);
                 }
                 break;
 
             case PLAYER_ACTION:
                 // Forward the PLAYER_ACTION message to the other player
-                SendStringToClient(gameMessage.opCode, gameMessage.contents);
+                BroadcastMessage(gameMessage.opCode, gameMessage.contents);
                 break;
 
             default:
@@ -129,7 +130,7 @@ function onPlayerAccepted(player) {
     logicalPlayerIDs[player.peerId] = logicalID;
     session.getLogger().info("[app] onPlayerAccepted: logicalPlayerIDs array = " + logicalPlayerIDs.toString());
 
-    SendStringToClient([player.peerId], OP_CODE_PLAYER_ACCEPTED, logicalID.toString());
+    BroadcastMessage(OP_CODE_PLAYER_ACCEPTED, logicalID.toString());
 }
 
 // On Player Disconnect is called when a player has left or been forcibly terminated
