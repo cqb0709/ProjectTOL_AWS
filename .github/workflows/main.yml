@@ -4,8 +4,8 @@ on:
   push:
     branches:
       - main
-    #paths:
-      #- Script/**
+    paths:
+      - Script/**
 
 jobs:
   build:
@@ -14,25 +14,7 @@ jobs:
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v4
-
-    #- name: Set up Python
-      #uses: actions/setup-python@v5
-      #with:
-        #python-version: '3.9'
-
-    #- name: Install Dependencies
-      #run: |
-        #python -m pip install --upgrade pip
-        #pip install -r requirements.txt
-
-    #- name: Test Python Code
-      #run: |
-        #python -m pytest Script/GameScript.py
-
-    #- name: Convert to Binary with PyInstaller
-      #run: |
-        #pyinstaller --onefile ./Client_TCP_sample.py
-  
+      
     - name: Compress folder
       run: |
         zip -r Script.zip ./Script
